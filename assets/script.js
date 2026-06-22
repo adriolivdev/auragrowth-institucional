@@ -26,17 +26,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* === FAQ ACCORDION === */
+  /* === BALÃO DO WHATSAPP FLUTUANTE ===
+     O "×" fecha o balão sem abrir o WhatsApp (stopPropagation impede o clique
+     de "vazar" para o link <a> que envolve o balão). */
+  var wafBubble = document.getElementById('wafBubble');
+  var wafBubbleClose = document.getElementById('wafBubbleClose');
+  if (wafBubbleClose && wafBubble) {
+    wafBubbleClose.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      wafBubble.classList.add('hide');
+    });
+  }
+
+  /* === FAQ ACCORDION ===
+     A altura agora é calculada via scrollHeight (em vez de um valor fixo no CSS),
+     assim nenhuma resposta fica cortada, mesmo em telas pequenas ou texto maior. */
   document.querySelectorAll('.faq-i').forEach(function (item) {
-    item.querySelector('.faq-q').addEventListener('click', function () {
+    var btn = item.querySelector('.faq-q');
+    var ans = item.querySelector('.faq-a');
+    btn.addEventListener('click', function () {
       var isOpen = item.classList.contains('op');
       document.querySelectorAll('.faq-i').forEach(function (i) {
         i.classList.remove('op');
         i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        i.querySelector('.faq-a').style.maxHeight = null;
       });
       if (!isOpen) {
         item.classList.add('op');
-        item.querySelector('.faq-q').setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-expanded', 'true');
+        ans.style.maxHeight = ans.scrollHeight + 'px';
       }
     });
   });
@@ -96,7 +115,9 @@ document.addEventListener('DOMContentLoaded', function () {
     'linear-gradient(135deg,#4DDB8F,#3F7CC4)',
   ];
 
-  /* Reviews fictícias pré-carregadas */
+  /* Reviews ilustrativas pré-carregadas.
+     ATENÇÃO (ver resumo do debug): estas são fictícias. Recomendado trocar
+     pelos depoimentos reais assim que o formulário abaixo começar a captá-los. */
   var REVIEWS_1 = [
     {
       nome: 'Camila Ferreira',
@@ -318,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* Preencher trilhos com loop infinito (duplicar para seamless) */
   function fillTrack(trackEl, reviews) {
-    // Embaralhar levemente para variedade
     var shuffled = reviews.slice().sort(function () { return Math.random() - 0.5; });
     var doubled = shuffled.concat(shuffled); // duplicar para loop
     doubled.forEach(function (r) {
@@ -375,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ── Persistência com localStorage ── */
+  /* ── Persistência com localStorage (cópia local para exibição imediata) ── */
   var LS_KEY = 'aura_deps_v1';
 
   function loadSaved() {
@@ -419,7 +439,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   renderSaved();
 
-  /* ── Submissão do formulário ── */
+  /* ── Submissão do formulário ──
+     Antes, o depoimento só era salvo no localStorage do próprio navegador
+     (a AURA nunca recebia nada). Agora, além de aparecer na hora pro
+     visitante, o conteúdo é enviado de verdade para o WhatsApp da AURA,
+     para a equipe revisar e publicar oficialmente. */
+  var AURA_WHATS = '5547988664567';
   var submitBtn = document.getElementById('depSubmit');
   var toast = document.getElementById('depToast');
   var btnTxt = document.getElementById('depBtnTxt');
@@ -441,23 +466,37 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!txt) { shake(document.getElementById('depMsg')); return; }
       if (selectedStars === 0) { shake(document.getElementById('depStarRow')); return; }
 
+      var insta = getVal('depInsta');
+      var seg = getVal('depSeg');
+
+      // Envia para o WhatsApp da AURA — chamado de forma síncrona (logo no clique)
+      // para o navegador não bloquear como pop-up indesejado.
+      var waMsg = 'Novo depoimento no site:\n' +
+        '⭐ ' + selectedStars + '/5\n' +
+        'Nome: ' + nome + '\n' +
+        'Empresa: ' + empresa + '\n' +
+        (seg ? 'Segmento: ' + seg + '\n' : '') +
+        (insta ? 'Instagram: ' + insta + '\n' : '') +
+        'Depoimento: "' + txt + '"';
+      window.open('https://wa.me/' + AURA_WHATS + '?text=' + encodeURIComponent(waMsg), '_blank');
+
       // Loading state
       submitBtn.disabled = true;
       submitBtn.style.opacity = '.7';
-      if (btnTxt) btnTxt.textContent = 'Publicando...';
+      if (btnTxt) btnTxt.textContent = 'Enviando...';
 
       var dep = {
         nome: nome,
         empresa: empresa,
-        insta: getVal('depInsta'),
-        seg: getVal('depSeg'),
+        insta: insta,
+        seg: seg,
         txt: txt,
         stars: selectedStars,
         data: new Date().toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
       };
 
       setTimeout(function () {
-        // Salvar e renderizar
+        // Salvar localmente e mostrar na hora pro visitante
         saveDep(dep);
         var novos = document.getElementById('depNovos');
         if (novos) {
@@ -477,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Restore button
         submitBtn.disabled = false;
         submitBtn.style.opacity = '';
-        if (btnTxt) btnTxt.textContent = 'Publicar depoimento';
+        if (btnTxt) btnTxt.textContent = 'Enviar depoimento';
 
         // Toast
         if (toast) {
@@ -509,7 +548,6 @@ document.addEventListener('DOMContentLoaded', function () {
     el.offsetHeight; // reflow
     el.style.animation = 'shakeX .4s ease';
     el.addEventListener('animationend', function () { el.style.animation = ''; }, { once: true });
-    // Add shake keyframes inline if not already
     if (!document.getElementById('shakeStyle')) {
       var s = document.createElement('style');
       s.id = 'shakeStyle';
