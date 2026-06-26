@@ -1,5 +1,5 @@
 /* =============================================
-   AURA Growth Digital — script.js
+   AURA Growth Digital — script.js v2
    ============================================= */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -26,9 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* === BALÃO DO WHATSAPP FLUTUANTE ===
-     O "×" fecha o balão sem abrir o WhatsApp (stopPropagation impede o clique
-     de "vazar" para o link <a> que envolve o balão). */
+  /* === BALÃO DO WHATSAPP FLUTUANTE === */
   var wafBubble = document.getElementById('wafBubble');
   var wafBubbleClose = document.getElementById('wafBubbleClose');
   if (wafBubbleClose && wafBubble) {
@@ -39,9 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* === FAQ ACCORDION ===
-     A altura agora é calculada via scrollHeight (em vez de um valor fixo no CSS),
-     assim nenhuma resposta fica cortada, mesmo em telas pequenas ou texto maior. */
+  /* === FAQ ACCORDION === */
   document.querySelectorAll('.faq-i').forEach(function (item) {
     var btn = item.querySelector('.faq-q');
     var ans = item.querySelector('.faq-a');
@@ -57,6 +53,70 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.setAttribute('aria-expanded', 'true');
         ans.style.maxHeight = ans.scrollHeight + 'px';
       }
+    });
+  });
+
+  /* === SERVIÇOS — FLIP DOS CARDS === */
+  document.querySelectorAll('.srv-c').forEach(function (card) {
+    card.querySelectorAll('.srv-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var isBack = btn.classList.contains('srv-toggle-back');
+        if (isBack) {
+          card.classList.add('flipping-out');
+          setTimeout(function () {
+            card.classList.remove('open');
+            card.classList.remove('flipping-out');
+          }, 180);
+        } else {
+          // Fecha outros abertos
+          document.querySelectorAll('.srv-c.open').forEach(function (c) {
+            if (c !== card) {
+              c.classList.add('flipping-out');
+              setTimeout(function () {
+                c.classList.remove('open');
+                c.classList.remove('flipping-out');
+              }, 180);
+            }
+          });
+          card.classList.add('flipping-in');
+          setTimeout(function () {
+            card.classList.add('open');
+            card.classList.remove('flipping-in');
+          }, 180);
+        }
+      });
+    });
+  });
+
+  /* === PORTFÓLIO — ABAS DE CATEGORIA === */
+  var portTabs = document.querySelectorAll('.port-tab');
+  var portGrids = {
+    servicos: document.getElementById('portServicos'),
+    empresas: document.getElementById('portEmpresas')
+  };
+
+  portTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var cat = tab.getAttribute('data-cat');
+
+      // Atualizar tabs
+      portTabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+
+      // Mostrar grid correto
+      Object.keys(portGrids).forEach(function (key) {
+        if (portGrids[key]) {
+          portGrids[key].classList.toggle('hidden', key !== cat);
+        }
+      });
+
+      // Re-acionar reveal nos cards do novo grid
+      var newCards = (portGrids[cat] || document.createElement('div')).querySelectorAll('.rv');
+      newCards.forEach(function (card) {
+        card.classList.remove('on');
+        setTimeout(function () { card.classList.add('on'); }, 50);
+      });
     });
   });
 
@@ -103,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
      DEPOIMENTOS — Prova Social
   ══════════════════════════════════════════ */
 
-  /* Paleta de cores para avatares */
   var AVATAR_COLORS = [
     'linear-gradient(135deg,#7C4DDB,#C4883F)',
     'linear-gradient(135deg,#E8602C,#C4883F)',
@@ -115,208 +174,42 @@ document.addEventListener('DOMContentLoaded', function () {
     'linear-gradient(135deg,#4DDB8F,#3F7CC4)',
   ];
 
-  /* Reviews ilustrativas pré-carregadas.
-     ATENÇÃO (ver resumo do debug): estas são fictícias. Recomendado trocar
-     pelos depoimentos reais assim que o formulário abaixo começar a captá-los. */
   var REVIEWS_1 = [
-    {
-      nome: 'Camila Ferreira',
-      empresa: 'Studio Beleza Pura',
-      insta: '@studiobezapura',
-      seg: 'Estética · SC',
-      stars: 5,
-      txt: 'Em 2 meses saímos do zero para 800 seguidores reais e minha agenda lotou. A Dri entende do negócio como se fosse dela mesma.',
-      cor: 0
-    },
-    {
-      nome: 'Pedro Almeida',
-      empresa: 'Almeida Advocacia',
-      insta: '@almeidaadv',
-      seg: 'Jurídico · SP',
-      stars: 5,
-      txt: 'Profissionalismo impecável. O site que criaram para o escritório virou referência entre os colegas. Recomendo sem hesitar.',
-      cor: 1
-    },
-    {
-      nome: 'Ana Sequeira',
-      empresa: 'Tasca do Largo',
-      insta: '@tascadolargo',
-      seg: 'Alimentação · PT',
-      stars: 5,
-      txt: 'Em três meses estávamos no Top 3 do Google Maps em Lisboa. O fluxo de clientes novos aumentou muito. Excelente trabalho!',
-      cor: 2
-    },
-    {
-      nome: 'Rafael Costa',
-      empresa: 'AutoCenter RC',
-      insta: '@autocenterrc',
-      seg: 'Automotivo · MG',
-      stars: 5,
-      txt: 'Os anúncios no Meta trouxeram leads qualificados desde a primeira semana. ROI excelente, gestão muito profissional.',
-      cor: 3
-    },
-    {
-      nome: 'Juliana Mendes',
-      empresa: 'Clínica Sorriso Pleno',
-      insta: '@sorrisopleno.sc',
-      seg: 'Odontologia · RS',
-      stars: 5,
-      txt: 'Minha clínica cresceu 40% em consultas em 4 meses. O trabalho no Instagram e no Google Meu Negócio foi transformador.',
-      cor: 4
-    },
-    {
-      nome: 'Marcos Vieira',
-      empresa: 'Academia FitLife',
-      insta: '@fitlifegym',
-      seg: 'Fitness · RJ',
-      stars: 5,
-      txt: 'As matrículas dispararam depois que a AURA assumiu nossas redes e o tráfego pago. Melhor investimento que fiz.',
-      cor: 5
-    },
-    {
-      nome: 'Fernanda Rocha',
-      empresa: 'Boutique Elegance',
-      insta: '@boutiqueelegance',
-      seg: 'Moda · SP',
-      stars: 5,
-      txt: 'A equipe é atenciosa, criativa e entrega com qualidade. Meu Instagram nunca esteve tão bonito e as vendas cresceram muito.',
-      cor: 6
-    },
-    {
-      nome: 'Carlos Neves',
-      empresa: 'TecAssist Portugal',
-      insta: '@tecassistpt',
-      seg: 'TI · Portugal',
-      stars: 5,
-      txt: 'Estratégia digital completa e sempre bem alinhada com o nosso mercado em Portugal. Recomendo a qualquer empresa.',
-      cor: 7
-    },
-    {
-      nome: 'Bianca Santos',
-      empresa: 'Espaço Lotus',
-      insta: '@espacolotus.ba',
-      seg: 'Bem-estar · BA',
-      stars: 5,
-      txt: 'Seriedade, criatividade e resultados reais. A AURA transformou minha presença digital em algo que eu me orgulho muito.',
-      cor: 0
-    },
-    {
-      nome: 'Diego Martins',
-      empresa: 'Construtora Martins',
-      insta: '@construtoramartins',
-      seg: 'Construção · PR',
-      stars: 5,
-      txt: 'Em 90 dias estávamos recebendo orçamentos via Instagram todos os dias. Trabalho de altíssimo nível.',
-      cor: 1
-    }
+    { nome: 'Camila Ferreira', empresa: 'Studio Beleza Pura', insta: '@studiobezapura', seg: 'Estética · SC', stars: 5, txt: 'Em 2 meses saímos do zero para 800 seguidores reais e minha agenda lotou. A equipe entende do negócio como se fosse delas.', cor: 0 },
+    { nome: 'Pedro Almeida', empresa: 'Almeida Advocacia', insta: '@almeidaadv', seg: 'Jurídico · SP', stars: 5, txt: 'Profissionalismo impecável. O site que criaram para o escritório virou referência entre os colegas. Recomendo sem hesitar.', cor: 1 },
+    { nome: 'Ana Sequeira', empresa: 'Tasca do Largo', insta: '@tascadolargo', seg: 'Alimentação · PT', stars: 5, txt: 'Em três meses estávamos no Top 3 do Google Maps em Lisboa. O fluxo de clientes novos aumentou muito. Excelente trabalho!', cor: 2 },
+    { nome: 'Rafael Costa', empresa: 'AutoCenter RC', insta: '@autocenterrc', seg: 'Automotivo · MG', stars: 5, txt: 'Os anúncios no Meta trouxeram leads qualificados desde a primeira semana. ROI excelente, gestão muito profissional.', cor: 3 },
+    { nome: 'Juliana Mendes', empresa: 'Clínica Sorriso Pleno', insta: '@sorrisopleno.sc', seg: 'Odontologia · RS', stars: 5, txt: 'Minha clínica cresceu 40% em consultas em 4 meses. O trabalho no Instagram e no Google Meu Negócio foi transformador.', cor: 4 },
+    { nome: 'Marcos Vieira', empresa: 'Academia FitLife', insta: '@fitlifegym', seg: 'Fitness · RJ', stars: 5, txt: 'As matrículas dispararam depois que a AURA assumiu nossas redes e o tráfego pago. Melhor investimento que fiz.', cor: 5 },
+    { nome: 'Fernanda Rocha', empresa: 'Boutique Elegance', insta: '@boutiqueelegance', seg: 'Moda · SP', stars: 5, txt: 'A equipe é atenciosa, criativa e entrega com qualidade. Meu Instagram nunca esteve tão bonito e as vendas cresceram muito.', cor: 6 },
+    { nome: 'Carlos Neves', empresa: 'TecAssist Portugal', insta: '@tecassistpt', seg: 'TI · Portugal', stars: 5, txt: 'Estratégia digital completa e sempre bem alinhada com o nosso mercado em Portugal. Recomendo a qualquer empresa.', cor: 7 },
+    { nome: 'Bianca Santos', empresa: 'Espaço Lotus', insta: '@espacolotus.ba', seg: 'Bem-estar · BA', stars: 5, txt: 'Seriedade, criatividade e resultados reais. A AURA transformou minha presença digital em algo que eu me orgulho muito.', cor: 0 },
+    { nome: 'Diego Martins', empresa: 'Construtora Martins', insta: '@construtoramartins', seg: 'Construção · PR', stars: 5, txt: 'Em 90 dias estávamos recebendo orçamentos via Instagram todos os dias. Trabalho de altíssimo nível.', cor: 1 }
   ];
 
   var REVIEWS_2 = [
-    {
-      nome: 'Priya Oliveira',
-      empresa: 'Café Raiz',
-      insta: '@caferaiz.sp',
-      seg: 'Cafeteria · SP',
-      stars: 5,
-      txt: 'O conteúdo que a AURA cria para o nosso Instagram tem personalidade e converte. Aumentamos o movimento em 60%.',
-      cor: 2
-    },
-    {
-      nome: 'Lucas Pires',
-      empresa: 'Pizzaria Fornalha',
-      insta: '@fornalha.pizza',
-      seg: 'Alimentação · SP',
-      stars: 5,
-      txt: 'Nunca imaginei que investir em marketing digital traria tanto resultado. Hoje estou no Top 1 da minha região no Google.',
-      cor: 3
-    },
-    {
-      nome: 'Isabela Cunha',
-      empresa: 'Clínica Luminar',
-      insta: '@clunimar.sc',
-      seg: 'Estética · SC',
-      stars: 5,
-      txt: 'A landing page que criaram converte muito bem. As campanhas de tráfego pago trouxeram leads de qualidade real.',
-      cor: 4
-    },
-    {
-      nome: 'Roberto Faria',
-      empresa: 'Ótica Visão Clara',
-      insta: '@visaoclara.mg',
-      seg: 'Varejo · MG',
-      stars: 5,
-      txt: 'Atendimento próximo e personalizado. A AURA não some depois de fechar o contrato, cuida mesmo do negócio.',
-      cor: 5
-    },
-    {
-      nome: 'Tatiana Lima',
-      empresa: 'Pet Shop Amigo Fiel',
-      insta: '@amigofiel.pet',
-      seg: 'Pet · RS',
-      stars: 5,
-      txt: 'Em poucos meses aumentei seguidores, avaliações no Google e clientes. Resultado real e equipe comprometida.',
-      cor: 6
-    },
-    {
-      nome: 'Henrique Sousa',
-      empresa: 'The Barber Shop',
-      insta: '@thebarbershopsc',
-      seg: 'Barbearia · RJ',
-      stars: 5,
-      txt: 'A gestão de redes e os anúncios trouxeram fila de espera na barbearia. Nunca faltou cliente desde que contratei.',
-      cor: 7
-    },
-    {
-      nome: 'Mariana Abreu',
-      empresa: 'Imobiliária Abreu',
-      insta: '@abreuimoveis.pt',
-      seg: 'Imobiliária · PT',
-      stars: 5,
-      txt: 'Trabalho impecável, relatórios claros e equipe sempre disponível. A AURA é nossa parceira de confiança em Portugal.',
-      cor: 0
-    },
-    {
-      nome: 'André Silveira',
-      empresa: 'Buffet Silveira',
-      insta: '@buffetsilveira',
-      seg: 'Eventos · SC',
-      stars: 5,
-      txt: 'Nossa agenda de eventos lotou depois de 3 meses com a AURA. O site novo passou profissionalismo que convenceu muita gente.',
-      cor: 1
-    },
-    {
-      nome: 'Patrícia Gomes',
-      empresa: 'Studio Pilates Core',
-      insta: '@corepilatess',
-      seg: 'Saúde · PR',
-      stars: 5,
-      txt: 'Profissionais incríveis que entendem de marketing e de gente. Me sinto apoiada em cada decisão do meu negócio.',
-      cor: 2
-    },
-    {
-      nome: 'Yuri Araújo',
-      empresa: 'Yuri Soundcar',
-      insta: '@yurisoundcar',
-      seg: 'Automotivo · SC',
-      stars: 5,
-      txt: 'Parceria incrível desde o início. A AURA construiu minha marca do zero e hoje tenho parceria exclusiva com a BYD.',
-      cor: 3
-    }
+    { nome: 'Priya Oliveira', empresa: 'Café Raiz', insta: '@caferaiz.sp', seg: 'Cafeteria · SP', stars: 5, txt: 'O conteúdo que a AURA cria para o nosso Instagram tem personalidade e converte. Aumentamos o movimento em 60%.', cor: 2 },
+    { nome: 'Lucas Pires', empresa: 'Pizzaria Fornalha', insta: '@fornalha.pizza', seg: 'Alimentação · SP', stars: 5, txt: 'Nunca imaginei que investir em marketing digital traria tanto resultado. Hoje estou no Top 1 da minha região no Google.', cor: 3 },
+    { nome: 'Isabela Cunha', empresa: 'Clínica Luminar', insta: '@clunimar.sc', seg: 'Estética · SC', stars: 5, txt: 'A landing page que criaram converte muito bem. As campanhas de tráfego pago trouxeram leads de qualidade real.', cor: 4 },
+    { nome: 'Roberto Faria', empresa: 'Ótica Visão Clara', insta: '@visaoclara.mg', seg: 'Varejo · MG', stars: 5, txt: 'Atendimento próximo e personalizado. A AURA não some depois de fechar o contrato, cuida mesmo do negócio.', cor: 5 },
+    { nome: 'Tatiana Lima', empresa: 'Pet Shop Amigo Fiel', insta: '@amigofiel.pet', seg: 'Pet · RS', stars: 5, txt: 'Em poucos meses aumentei seguidores, avaliações no Google e clientes. Resultado real e equipe comprometida.', cor: 6 },
+    { nome: 'Henrique Sousa', empresa: 'The Barber Shop', insta: '@thebarbershopsc', seg: 'Barbearia · RJ', stars: 5, txt: 'A gestão de redes e os anúncios trouxeram fila de espera na barbearia. Nunca faltou cliente desde que contratei.', cor: 7 },
+    { nome: 'Mariana Abreu', empresa: 'Imobiliária Abreu', insta: '@abreuimoveis.pt', seg: 'Imobiliária · PT', stars: 5, txt: 'Trabalho impecável, relatórios claros e equipe sempre disponível. A AURA é nossa parceira de confiança em Portugal.', cor: 0 },
+    { nome: 'André Silveira', empresa: 'Buffet Silveira', insta: '@buffetsilveira', seg: 'Eventos · SC', stars: 5, txt: 'Nossa agenda de eventos lotou depois de 3 meses com a AURA. O site novo passou profissionalismo que convenceu muita gente.', cor: 1 },
+    { nome: 'Patrícia Gomes', empresa: 'Studio Pilates Core', insta: '@corepilatess', seg: 'Saúde · PR', stars: 5, txt: 'Profissionais incríveis que entendem de marketing e de gente. Me sinto apoiada em cada decisão do meu negócio.', cor: 2 },
+    { nome: 'Yuri Araújo', empresa: 'Yuri Soundcar', insta: '@yurisoundcar', seg: 'Automotivo · SC', stars: 5, txt: 'Parceria incrível desde o início. A AURA construiu minha marca do zero e hoje tenho parceria exclusiva com a BYD.', cor: 3 }
   ];
 
-  /* Gerar iniciais para avatar */
   function getInitials(nome) {
     var parts = nome.trim().split(' ');
     if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     return parts[0].slice(0, 2).toUpperCase();
   }
 
-  /* Gerar estrelas HTML */
   function starsHTML(n) {
     return '★'.repeat(n) + '☆'.repeat(5 - n);
   }
 
-  /* Criar card de review */
   function buildCard(review) {
     var card = document.createElement('div');
     card.className = 'dep-card';
@@ -337,13 +230,10 @@ document.addEventListener('DOMContentLoaded', function () {
     return card;
   }
 
-  /* Preencher trilhos com loop infinito (duplicar para seamless) */
   function fillTrack(trackEl, reviews) {
     var shuffled = reviews.slice().sort(function () { return Math.random() - 0.5; });
-    var doubled = shuffled.concat(shuffled); // duplicar para loop
-    doubled.forEach(function (r) {
-      trackEl.appendChild(buildCard(r));
-    });
+    var doubled = shuffled.concat(shuffled);
+    doubled.forEach(function (r) { trackEl.appendChild(buildCard(r)); });
   }
 
   var t1 = document.getElementById('depT1');
@@ -351,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (t1) fillTrack(t1, REVIEWS_1);
   if (t2) fillTrack(t2, REVIEWS_2);
 
-  /* ── Star Rating Interactivo ── */
+  /* ── Star Rating ── */
   var selectedStars = 0;
   var starBtns = document.querySelectorAll('.dep-star-btn');
   var starTxt = document.getElementById('depStarTxt');
@@ -374,35 +264,21 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   starBtns.forEach(function (btn) {
-    btn.addEventListener('mouseenter', function () {
-      updateStars(parseInt(btn.getAttribute('data-val')), true);
-    });
-    btn.addEventListener('mouseleave', function () {
-      updateStars(selectedStars, false);
-    });
-    btn.addEventListener('click', function () {
-      selectedStars = parseInt(btn.getAttribute('data-val'));
-      updateStars(selectedStars, false);
-    });
+    btn.addEventListener('mouseenter', function () { updateStars(parseInt(btn.getAttribute('data-val')), true); });
+    btn.addEventListener('mouseleave', function () { updateStars(selectedStars, false); });
+    btn.addEventListener('click', function () { selectedStars = parseInt(btn.getAttribute('data-val')); updateStars(selectedStars, false); });
   });
 
   /* ── Contador de caracteres ── */
   var msgInp = document.getElementById('depMsg');
   var charsSpan = document.getElementById('depChars');
   if (msgInp && charsSpan) {
-    msgInp.addEventListener('input', function () {
-      charsSpan.textContent = msgInp.value.length;
-    });
+    msgInp.addEventListener('input', function () { charsSpan.textContent = msgInp.value.length; });
   }
 
-  /* ── Persistência com localStorage (cópia local para exibição imediata) ── */
+  /* ── Persistência com localStorage ── */
   var LS_KEY = 'aura_deps_v1';
-
-  function loadSaved() {
-    try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
-    catch (e) { return []; }
-  }
-
+  function loadSaved() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch (e) { return []; } }
   function saveDep(obj) {
     var arr = loadSaved();
     arr.unshift(obj);
@@ -410,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
     try { localStorage.setItem(LS_KEY, JSON.stringify(arr)); } catch (e) {}
   }
 
-  /* Renderizar depoimentos salvos */
   function renderSaved() {
     var novos = document.getElementById('depNovos');
     if (!novos) return;
@@ -439,20 +314,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   renderSaved();
 
-  /* ── Submissão do formulário ──
-     Antes, o depoimento só era salvo no localStorage do próprio navegador
-     (a AURA nunca recebia nada). Agora, além de aparecer na hora pro
-     visitante, o conteúdo é enviado de verdade para o WhatsApp da AURA,
-     para a equipe revisar e publicar oficialmente. */
+  /* ── Submissão do formulário ── */
   var AURA_WHATS = '5547988664567';
   var submitBtn = document.getElementById('depSubmit');
   var toast = document.getElementById('depToast');
   var btnTxt = document.getElementById('depBtnTxt');
 
-  function getVal(id) {
-    var el = document.getElementById(id);
-    return el ? el.value.trim() : '';
-  }
+  function getVal(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
   if (submitBtn) {
     submitBtn.addEventListener('click', function () {
@@ -460,7 +328,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var empresa = getVal('depEmpresa');
       var txt = getVal('depMsg');
 
-      // Validação básica
       if (!nome) { shake(document.getElementById('depNome')); return; }
       if (!empresa) { shake(document.getElementById('depEmpresa')); return; }
       if (!txt) { shake(document.getElementById('depMsg')); return; }
@@ -469,8 +336,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var insta = getVal('depInsta');
       var seg = getVal('depSeg');
 
-      // Envia para o WhatsApp da AURA — chamado de forma síncrona (logo no clique)
-      // para o navegador não bloquear como pop-up indesejado.
       var waMsg = 'Novo depoimento no site:\n' +
         '⭐ ' + selectedStars + '/5\n' +
         'Nome: ' + nome + '\n' +
@@ -480,54 +345,28 @@ document.addEventListener('DOMContentLoaded', function () {
         'Depoimento: "' + txt + '"';
       window.open('https://wa.me/' + AURA_WHATS + '?text=' + encodeURIComponent(waMsg), '_blank');
 
-      // Loading state
       submitBtn.disabled = true;
       submitBtn.style.opacity = '.7';
       if (btnTxt) btnTxt.textContent = 'Enviando...';
 
       var dep = {
-        nome: nome,
-        empresa: empresa,
-        insta: insta,
-        seg: seg,
-        txt: txt,
-        stars: selectedStars,
+        nome: nome, empresa: empresa, insta: insta, seg: seg, txt: txt, stars: selectedStars,
         data: new Date().toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
       };
 
       setTimeout(function () {
-        // Salvar localmente e mostrar na hora pro visitante
         saveDep(dep);
         var novos = document.getElementById('depNovos');
-        if (novos) {
-          var card = buildNovoCard(dep);
-          novos.insertBefore(card, novos.firstChild);
-        }
-
-        // Reset form
-        ['depNome','depEmpresa','depInsta','depSeg','depMsg'].forEach(function (id) {
-          var el = document.getElementById(id);
-          if (el) el.value = '';
-        });
+        if (novos) { var card = buildNovoCard(dep); novos.insertBefore(card, novos.firstChild); }
+        ['depNome','depEmpresa','depInsta','depSeg','depMsg'].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ''; });
         selectedStars = 0;
         updateStars(0, false);
         if (charsSpan) charsSpan.textContent = '0';
-
-        // Restore button
         submitBtn.disabled = false;
         submitBtn.style.opacity = '';
         if (btnTxt) btnTxt.textContent = 'Enviar depoimento';
-
-        // Toast
-        if (toast) {
-          toast.classList.add('show');
-          setTimeout(function () { toast.classList.remove('show'); }, 4000);
-        }
-
-        // Scroll suave para o novo card
-        if (novos && novos.firstChild) {
-          novos.firstChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+        if (toast) { toast.classList.add('show'); setTimeout(function () { toast.classList.remove('show'); }, 4000); }
+        if (novos && novos.firstChild) { novos.firstChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
       }, 800);
     });
   }
@@ -535,17 +374,13 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ── Utilitários ── */
   function escHTML(str) {
     if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   function shake(el) {
     if (!el) return;
     el.style.animation = 'none';
-    el.offsetHeight; // reflow
+    el.offsetHeight;
     el.style.animation = 'shakeX .4s ease';
     el.addEventListener('animationend', function () { el.style.animation = ''; }, { once: true });
     if (!document.getElementById('shakeStyle')) {
@@ -558,14 +393,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ── Pausar animação ao hover nos trilhos ── */
   document.querySelectorAll('.dep-track-w').forEach(function (w) {
-    w.addEventListener('mouseenter', function () {
-      var track = w.querySelector('.dep-track');
-      if (track) track.style.animationPlayState = 'paused';
-    });
-    w.addEventListener('mouseleave', function () {
-      var track = w.querySelector('.dep-track');
-      if (track) track.style.animationPlayState = 'running';
-    });
+    w.addEventListener('mouseenter', function () { var track = w.querySelector('.dep-track'); if (track) track.style.animationPlayState = 'paused'; });
+    w.addEventListener('mouseleave', function () { var track = w.querySelector('.dep-track'); if (track) track.style.animationPlayState = 'running'; });
   });
 
   /* ── Animar barras de avaliação ao entrar na viewport ── */
@@ -580,10 +409,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }, { threshold: 0.5 });
-    bars.forEach(function (b) {
-      b.style.animationPlayState = 'paused';
-      barObs.observe(b);
-    });
+    bars.forEach(function (b) { b.style.animationPlayState = 'paused'; barObs.observe(b); });
   }
 
 });
