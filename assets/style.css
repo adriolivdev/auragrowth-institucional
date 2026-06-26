@@ -112,34 +112,9 @@ section.on, .rv.on { opacity: 1; transform: translateY(0); }
   padding: 0 clamp(1rem, 5vw, 2.5rem);
   height: 64px; display: flex; align-items: center; gap: 1.75rem;
 }
-/* Logo tipográfico */
+/* Logo */
 .logo-link { text-decoration: none; flex-shrink: 0; }
-.logo-txt {
-  font-family: var(--font-d);
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -.01em;
-  color: var(--ink);
-  line-height: 1;
-  display: flex;
-  align-items: baseline;
-  gap: .2em;
-}
-.logo-txt em {
-  font-style: italic;
-  font-weight: 300;
-  font-size: 1.1rem;
-  background: var(--grad-text);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.logo-txt-ft {
-  font-size: 1.2rem;
-  display: block;
-  margin-bottom: .65rem;
-}
-.logo-txt-ft em { font-size: 1rem; }
+.logo-img { height: 36px; width: auto; flex-shrink: 0; display: block; }
 
 nav { display: flex; gap: 1.5rem; margin-left: auto; }
 nav a { font-size: .8rem; color: var(--muted); transition: color .2s; white-space: nowrap; }
@@ -294,12 +269,25 @@ nav a:hover, nav a.act { color: var(--orange); }
 }
 
 /* === SERVIÇOS — CARDS SEPARADOS === */
+.srv { background: var(--bg); }
 .srv-g {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
-  /* sem background nem border no container — cada card tem os seus */
+  justify-items: stretch;
 }
+/* Último card sozinho na linha não estica — máximo 1/3 da largura */
+.srv-c:last-child:nth-child(3n + 1) { grid-column: span 1; }
+.srv-cta {
+  text-align: center;
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .85rem;
+  width: 100%;
+}
+.srv-cta-txt { font-size: .9rem; color: var(--muted); max-width: 480px; line-height: 1.65; text-align: center; }
 .srv-c {
   background: var(--white);
   border: 1px solid var(--border);
@@ -359,18 +347,22 @@ nav a:hover, nav a.act { color: var(--orange); }
 .srv-back ul { display: flex; flex-direction: column; gap: .5rem; flex: 1; }
 .srv-back li { font-size: .83rem; color: var(--ink); line-height: 1.5; list-style: none; }
 .srv-back-inc { font-size: .78rem; color: var(--muted); line-height: 1.55; padding: .75rem; background: rgba(124,77,219,.06); border-radius: 6px; border-left: 3px solid var(--purple); }
-.srv-cta { text-align: center; margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; gap: .85rem; }
-.srv-cta-txt { font-size: .9rem; color: var(--muted); max-width: 480px; line-height: 1.65; }
 
-/* Animação de virar o card */
-@keyframes flipIn {
-  0%   { opacity: 1; transform: rotateY(0deg); }
-  50%  { opacity: 0; transform: rotateY(90deg); }
-  100% { opacity: 1; transform: rotateY(0deg); }
+/* Animação de virar — aplicada apenas no card clicado */
+@keyframes flipCardIn {
+  0%   { opacity: 1; transform: scaleX(1); }
+  40%  { opacity: 0; transform: scaleX(0); }
+  60%  { opacity: 0; transform: scaleX(0); }
+  100% { opacity: 1; transform: scaleX(1); }
 }
-.srv-c { perspective: 800px; }
-.srv-c.flipping-in,
-.srv-c.flipping-out { animation: flipIn .36s cubic-bezier(.4,0,.2,1); }
+@keyframes flipCardOut {
+  0%   { opacity: 1; transform: scaleX(1); }
+  40%  { opacity: 0; transform: scaleX(0); }
+  60%  { opacity: 0; transform: scaleX(0); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+.srv-c.flipping-in  { animation: flipCardIn  .4s cubic-bezier(.4,0,.2,1); }
+.srv-c.flipping-out { animation: flipCardOut .4s cubic-bezier(.4,0,.2,1); }
 
 /* Mobile: 1 coluna, card com borda roxa destacada */
 @media (max-width: 768px) {
@@ -467,7 +459,7 @@ nav a:hover, nav a.act { color: var(--orange); }
 /* Área da foto: proporção fixa em ambos os cards, sem depender do tamanho do arquivo */
 .team-photo {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
   position: relative; overflow: hidden;
   flex-shrink: 0;
   background: rgba(255,255,255,.04);
@@ -488,12 +480,12 @@ nav a:hover, nav a.act { color: var(--orange); }
 .team-photo-img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
+  object-fit: cover;
+  object-position: center center;
   display: block;
 }
-.team-photo-adriane .team-photo-img { object-position: center bottom; }
-.team-photo-andreza .team-photo-img { object-position: center bottom; }
+.team-photo-adriane .team-photo-img { object-position: center 30%; }
+.team-photo-andreza .team-photo-img { object-position: center 30%; }
 .team-info { padding: 1.5rem 1.75rem 1.75rem; flex: 1; } /* flex:1 empurra info para preencher altura igual */
 .team-info h3 { font-family: var(--font-d); font-size: 1.5rem; font-weight: 300; color: #fff; margin-bottom: .25rem; }
 .team-role { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); margin-bottom: .85rem; display: block; }
@@ -675,6 +667,7 @@ nav a:hover, nav a.act { color: var(--orange); }
 /* === FOOTER === */
 footer { background: #0D0C0B; color: rgba(255,255,255,.5); }
 .foot-in { display: flex; flex-wrap: wrap; gap: 2.5rem; padding: 3rem 0; justify-content: space-between; align-items: flex-start; }
+.foot-logo { height: 32px; width: auto; margin-bottom: .65rem; display: block; }
 .foot-brand p { font-size: .8rem; line-height: 1.6; }
 .foot-cnpj { margin-top: .65rem; font-size: .74rem; color: rgba(255,255,255,.35); padding: .35rem .75rem; border: 1px solid rgba(255,255,255,.1); border-radius: var(--r); display: inline-block; letter-spacing: .04em; }
 .foot-links { display: flex; flex-direction: column; gap: .65rem; }

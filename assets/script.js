@@ -62,28 +62,29 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
         var isBack = btn.classList.contains('srv-toggle-back');
+
         if (isBack) {
+          // Fecha este card com animação
           card.classList.add('flipping-out');
           setTimeout(function () {
             card.classList.remove('open');
             card.classList.remove('flipping-out');
-          }, 180);
+          }, 200);
         } else {
-          // Fecha outros abertos
-          document.querySelectorAll('.srv-c.open').forEach(function (c) {
+          // Fecha TODOS os outros sem animação (snap)
+          document.querySelectorAll('.srv-c').forEach(function (c) {
             if (c !== card) {
-              c.classList.add('flipping-out');
-              setTimeout(function () {
-                c.classList.remove('open');
-                c.classList.remove('flipping-out');
-              }, 180);
+              c.classList.remove('open');
+              c.classList.remove('flipping-in');
+              c.classList.remove('flipping-out');
             }
           });
+          // Abre só este card com animação
           card.classList.add('flipping-in');
           setTimeout(function () {
-            card.classList.add('open');
             card.classList.remove('flipping-in');
-          }, 180);
+            card.classList.add('open');
+          }, 200);
         }
       });
     });
