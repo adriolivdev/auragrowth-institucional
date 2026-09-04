@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ══════════════════════════════════════════════════════════════
+      LANDING DE DIAGNÓSTICO (triagem de lead), da AURA Growth.
+      Página independente e self-contained (CSS e JS embutidos), pode ser
+      publicada em QUALQUER domínio, inclusive no seu outro domínio.
+
+      >>> AO PUBLICAR NO SEU OUTRO DOMÍNIO, TROQUE: <<<
+        1. o <link rel="canonical"> abaixo pela URL real da página;
+        2. as meta og:url / og:image, se for usar compartilhamento;
+        3. se quiser a logo, copie o arquivo logo-aura.png para o mesmo
+           servidor (ou troque o caminho da <img> do cabeçalho).
+
+      O resultado do quiz é enviado para o WhatsApp da Andreza
+      (5547991518157). Para trocar, procure por WHATS_DESTINO no script.
+      ══════════════════════════════════════════════════════════════ -->
+
+    <title>Diagnóstico digital gratuito | AURA Growth</title>
+    <meta
+      name="description"
+      content="Responda algumas perguntas rápidas e receba um diagnóstico gratuito com as melhores soluções digitais para o seu negócio, feito pela AURA Growth."
+    />
+    <link rel="canonical" href="https://auragrowth.com.br/diagnostico.html" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Diagnóstico digital gratuito | AURA Growth" />
+    <meta property="og:description" content="Descubra as melhores soluções digitais para o seu negócio em 2 minutos." />
+
+    <!-- Google Tag Manager (mesmo container do site, funciona entre domínios) -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NR9CGCS4");
+    </script>
+    <!-- Google Ads / Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18253939997"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "AW-18253939997");
+      gtag("config", "G-0EVMF76012");
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ============================= TOKENS ============================= */
+      :root {
+        --purple: #7c4ddb;
+        --orange: #e8602c;
+        --amber: #c4883f;
+        --green: #22c55e;
+        --ink: #1a1917;
+        --muted: #6b6965;
+        --bg: #f8f6f3;
+        --white: #fff;
+        --border: rgba(26, 25, 23, 0.1);
+        --grad: linear-gradient(135deg, #7c4ddb 0%, #c4883f 55%, #e8602c 100%);
+        --grad-text: linear-gradient(120deg, #7c4ddb, #e8602c);
+        --font-d: "Cormorant Garamond", Georgia, serif;
+        --font-b: "DM Sans", sans-serif;
+        --shadow: 0 24px 70px rgba(26, 25, 23, 0.12);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-b);
+        background: var(--bg);
+        color: var(--ink);
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ===================== FUNDO ANIMADO (aura) ====================== */
+      .aura {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .aura span {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.55;
+      }
+      .aura .b1 {
+        width: 44vw;
+        height: 44vw;
+        left: -8vw;
+        top: -6vw;
+        background: radial-gradient(circle, rgba(124, 77, 219, 0.55), transparent 70%);
+        animation: float1 20s ease-in-out infinite alternate;
+      }
+      .aura .b2 {
+        width: 40vw;
+        height: 40vw;
+        right: -8vw;
+        top: 8vw;
+        background: radial-gradient(circle, rgba(232, 96, 44, 0.45), transparent 70%);
+        animation: float2 24s ease-in-out infinite alternate;
+      }
+      .aura .b3 {
+        width: 36vw;
+        height: 36vw;
+        left: 30vw;
+        bottom: -14vw;
+        background: radial-gradient(circle, rgba(196, 136, 63, 0.4), transparent 70%);
+        animation: float3 26s ease-in-out infinite alternate;
+      }
+      @keyframes float1 {
+        to {
+          transform: translate(6vw, 5vh) scale(1.15);
+        }
+      }
+      @keyframes float2 {
+        to {
+          transform: translate(-5vw, 7vh) scale(1.2);
+        }
+      }
+      @keyframes float3 {
+        to {
+          transform: translate(4vw, -6vh) scale(1.1);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .aura span {
+          animation: none;
+        }
+      }
+
+      /* ========================= CABEÇALHO ============================ */
+      header {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 1.8rem 1rem 0;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .brand img {
+        height: 34px;
+        width: auto;
+      }
+      .brand-txt {
+        font-family: var(--font-d);
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+      .brand-txt b {
+        background: var(--grad-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* ============================ PALCO ============================= */
+      main {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 680px;
+        padding: 2rem 1.2rem 4rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: clamp(1.5rem, 4vw, 2.6rem);
+      }
+
+      /* progresso */
+      .progress {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        margin-bottom: 1.8rem;
+      }
+      .progress-bar {
+        flex: 1;
+        height: 6px;
+        background: rgba(124, 77, 219, 0.14);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0;
+        background: var(--grad);
+        border-radius: 99px;
+        transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .progress-txt {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* passo */
+      .step {
+        animation: stepIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      @keyframes stepIn {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .eyebrow {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--purple);
+        margin-bottom: 0.5rem;
+      }
+      .q-title {
+        font-family: var(--font-d);
+        font-size: clamp(1.6rem, 5vw, 2.2rem);
+        font-weight: 600;
+        line-height: 1.15;
+        margin-bottom: 1.4rem;
+      }
+      .q-title .em {
+        background: var(--grad-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* opções */
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        width: 100%;
+        text-align: left;
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 1rem 1.15rem;
+        font-family: var(--font-b);
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--ink);
+        cursor: pointer;
+        transition:
+          border-color 0.18s,
+          background 0.18s,
+          transform 0.12s,
+          box-shadow 0.18s;
+      }
+      .opt:hover {
+        border-color: rgba(124, 77, 219, 0.5);
+        box-shadow: 0 6px 22px rgba(124, 77, 219, 0.12);
+        transform: translateY(-1px);
+      }
+      .opt .opt-ic {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        background: rgba(124, 77, 219, 0.09);
+      }
+      .opt.sel {
+        border-color: var(--purple);
+        background: rgba(124, 77, 219, 0.06);
+      }
+      .opt.sel .opt-ic {
+        background: var(--grad);
+      }
+      .opt .opt-check {
+        margin-left: auto;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 0.75rem;
+        transition:
+          background 0.18s,
+          border-color 0.18s;
+      }
+      .opt.sel .opt-check {
+        background: var(--purple);
+        border-color: var(--purple);
+      }
+
+      /* inputs */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-bottom: 0.9rem;
+      }
+      .field label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .field input {
+        font-family: var(--font-b);
+        font-size: 1rem;
+        padding: 0.9rem 1.05rem;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        background: var(--white);
+        color: var(--ink);
+        transition: border-color 0.18s;
+      }
+      .field input:focus {
+        outline: none;
+        border-color: var(--purple);
+      }
+
+      /* navegação */
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 1.6rem;
+      }
+      .btn {
+        font-family: var(--font-b);
+        font-weight: 600;
+        font-size: 0.95rem;
+        border-radius: 99px;
+        padding: 0.85rem 1.7rem;
+        cursor: pointer;
+        border: none;
+        transition:
+          transform 0.15s,
+          box-shadow 0.2s,
+          opacity 0.2s;
+      }
+      .btn-grad {
+        background: var(--grad);
+        color: #fff;
+        box-shadow: 0 8px 24px rgba(124, 77, 219, 0.3);
+      }
+      .btn-grad:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(232, 96, 44, 0.34);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+      }
+      .btn-ghost:hover {
+        color: var(--ink);
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .hint {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 0.9rem;
+        text-align: center;
+      }
+
+      /* ========================= RESULTADO =========================== */
+      .result {
+        animation: stepIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .result-emoji {
+        font-size: 2.6rem;
+        margin-bottom: 0.6rem;
+      }
+      .result h2 {
+        font-family: var(--font-d);
+        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        font-weight: 600;
+        line-height: 1.14;
+        margin-bottom: 0.8rem;
+      }
+      .result-lead {
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 1.6rem;
+      }
+      .recs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        margin-bottom: 1.6rem;
+      }
+      .rec {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.9rem;
+        padding: 1rem 1.15rem;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--purple);
+        border-radius: 12px;
+      }
+      .rec .rec-ic {
+        font-size: 1.3rem;
+        line-height: 1.3;
+      }
+      .rec h3 {
+        font-size: 1rem;
+        margin-bottom: 0.15rem;
+      }
+      .rec p {
+        font-size: 0.86rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .summary {
+        background: rgba(124, 77, 219, 0.05);
+        border: 1px solid rgba(124, 77, 219, 0.14);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        margin-bottom: 1.6rem;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: 0.86rem;
+        padding: 0.35rem 0;
+      }
+      .summary-row + .summary-row {
+        border-top: 1px solid rgba(124, 77, 219, 0.1);
+      }
+      .summary-row span:first-child {
+        color: var(--muted);
+      }
+      .summary-row span:last-child {
+        font-weight: 600;
+        text-align: right;
+      }
+      .wa-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        background: var(--green);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.05rem;
+        padding: 1.1rem;
+        border-radius: 14px;
+        text-decoration: none;
+        box-shadow: 0 10px 30px rgba(34, 197, 94, 0.32);
+        transition:
+          transform 0.15s,
+          box-shadow 0.2s;
+      }
+      .wa-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 36px rgba(34, 197, 94, 0.4);
+      }
+      .wa-btn svg {
+        width: 22px;
+        height: 22px;
+        fill: #fff;
+      }
+      .restart {
+        display: block;
+        margin: 1.1rem auto 0;
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 0.85rem;
+        cursor: pointer;
+        font-family: var(--font-b);
+      }
+      .restart:hover {
+        color: var(--ink);
+      }
+
+      footer {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        font-size: 0.78rem;
+        color: var(--muted);
+        padding: 1.4rem 1rem 2rem;
+      }
+      footer a {
+        color: var(--purple);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NR9CGCS4"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+
+    <!-- fundo animado -->
+    <div class="aura"><span class="b1"></span><span class="b2"></span><span class="b3"></span></div>
+
+    <header>
+      <a class="brand" href="index.html">
+        <img src="logo-aura.png" alt="AURA Growth" onerror="this.style.display = 'none'" />
+        <span class="brand-txt">AURA <b>Growth</b></span>
+      </a>
+    </header>
+
+    <main>
+      <div class="card">
+        <div class="progress">
+          <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+          <span class="progress-txt" id="ptxt">Passo 1</span>
+        </div>
+        <div id="quiz"></div>
+      </div>
+    </main>
+
+    <footer>Diagnóstico gratuito e sem compromisso. <a href="index.html">Voltar ao site da AURA Growth</a></footer>
+
+    <script>
+      /* ══════════════════════════════════════════════════════════════
+         CONFIGURAÇÃO DO QUIZ
+         WHATS_DESTINO: número que recebe o diagnóstico (Andreza).
+         Para editar as perguntas, mexa no array STEPS abaixo.
+         ══════════════════════════════════════════════════════════════ */
+      var WHATS_DESTINO = "5547991518157";
+
+      var STEPS = [
+        {
+          key: "objetivo",
+          type: "single",
+          eyebrow: "Vamos começar",
+          title: 'Qual é o seu <span class="em">principal objetivo</span> hoje?',
+          options: [
+            { ic: "🎯", label: "Atrair mais clientes e vender mais" },
+            { ic: "⭐", label: "Ter presença e autoridade no digital" },
+            { ic: "🌱", label: "Começar agora, estou saindo do zero" },
+            { ic: "📈", label: "Escalar o que já está funcionando" },
+          ],
+        },
+        {
+          key: "investimento",
+          type: "single",
+          eyebrow: "Alinhando expectativas",
+          title: 'Quanto você pretende <span class="em">investir por mês</span>?',
+          options: [
+            { ic: "🌿", label: "Até R$500 por mês" },
+            { ic: "🚀", label: "De R$500 a R$1.000 por mês" },
+            { ic: "💼", label: "De R$1.000 a R$3.000 por mês" },
+            { ic: "🏆", label: "Acima de R$3.000 por mês" },
+            { ic: "🤔", label: "Ainda não sei, quero uma orientação" },
+          ],
+        },
+        {
+          key: "resultado",
+          type: "single",
+          eyebrow: "O que importa pra você",
+          title: 'Que <span class="em">resultado</span> você mais quer nos próximos meses?',
+          options: [
+            { ic: "💬", label: "Mais orçamentos chegando no WhatsApp" },
+            { ic: "📍", label: "Aparecer no Google da minha região" },
+            { ic: "📱", label: "Crescer e engajar nas redes sociais" },
+            { ic: "🌐", label: "Ter um site profissional que vende" },
+            { ic: "🛒", label: "Vender pela internet" },
+          ],
+        },
+        {
+          key: "regiao",
+          type: "text",
+          eyebrow: "Onde você quer chegar",
+          title: 'Qual <span class="em">cidade ou região</span> você quer alcançar?',
+          fields: [{ name: "cidade", label: "Cidade ou região", placeholder: "Ex: Guaramirim, Jaraguá do Sul, Norte de SC..." }],
+        },
+        {
+          key: "conhece",
+          type: "multi",
+          eyebrow: "Quase lá",
+          title: 'Você já conhece <span class="em">algum dos nossos serviços</span>?',
+          note: "Pode marcar mais de um. Se não conhecia nenhum, tudo bem, é só seguir.",
+          options: [
+            { ic: "🌐", label: "Criação de Sites" },
+            { ic: "🎯", label: "Tráfego Pago (Google e Meta)" },
+            { ic: "📍", label: "SEO Local e Google Meu Negócio" },
+            { ic: "📱", label: "Gestão de Redes Sociais" },
+            { ic: "🤖", label: "IA e Automação de atendimento" },
+            { ic: "✨", label: "Ainda não conhecia a AURA" },
+          ],
+        },
+        {
+          key: "contato",
+          type: "contact",
+          eyebrow: "Última etapa",
+          title: 'Pra onde enviamos <span class="em">o seu diagnóstico</span>?',
+          fields: [
+            { name: "nome", label: "Seu nome", placeholder: "Como podemos te chamar?" },
+            { name: "whats", label: "Seu WhatsApp", placeholder: "(00) 00000-0000" },
+          ],
+        },
+      ];
+
+      /* Recomendações por resultado esperado. Cada uma vira um card e entra
+         na mensagem do WhatsApp. Ajuste os textos se quiser. */
+      var RECS = {
+        "Mais orçamentos chegando no WhatsApp": [
+          {
+            ic: "🎯",
+            t: "Tráfego Pago com clique para WhatsApp",
+            d: "Anúncios que colocam seu serviço na frente de quem já está procurando e mandam o lead direto pro seu WhatsApp.",
+          },
+          { ic: "🌐", t: "Landing page de conversão", d: "Uma página enxuta feita para transformar o clique do anúncio em contato." },
+        ],
+        "Aparecer no Google da minha região": [
+          {
+            ic: "📍",
+            t: "SEO Local e Google Meu Negócio",
+            d: "Otimização para você aparecer no Google e no Maps quando pesquisarem seu serviço na sua cidade.",
+          },
+          { ic: "🌐", t: "Site indexado no Google", d: "Um site construído para rankear em buscas orgânicas da sua região." },
+        ],
+        "Crescer e engajar nas redes sociais": [
+          {
+            ic: "📱",
+            t: "Gestão de Redes e Conteúdo",
+            d: "Instagram com estratégia, identidade e conteúdo que atrai e engaja o público certo.",
+          },
+          { ic: "⭐", t: "Posicionamento de autoridade", d: "Conteúdo que mostra seu conhecimento e constrói confiança com o cliente." },
+        ],
+        "Ter um site profissional que vende": [
+          {
+            ic: "🌐",
+            t: "Criação de Site ou Landing Page",
+            d: "Site rápido, bonito e otimizado, pensado para converter visitante em cliente.",
+          },
+          { ic: "📍", t: "SEO on-page", d: "Estrutura feita para o Google entender e ranquear o seu site na região." },
+        ],
+        "Vender pela internet": [
+          { ic: "🌐", t: "Site preparado para vender", d: "Estrutura de site ou página focada em transformar visita em venda." },
+          { ic: "🎯", t: "Tráfego Pago", d: "Anúncios para levar as pessoas certas até a sua oferta." },
+          { ic: "🤖", t: "Automação e IA no WhatsApp", d: "Atendimento e qualificação de leads 24 horas por dia, sem depender de equipe." },
+        ],
+      };
+
+      /* ======================= MOTOR DO QUIZ ======================== */
+      var state = { i: 0, answers: {} };
+      var quiz = document.getElementById("quiz");
+      var fill = document.getElementById("fill");
+      var ptxt = document.getElementById("ptxt");
+
+      function setProgress() {
+        var pct = (state.i / STEPS.length) * 100;
+        fill.style.width = pct + "%";
+        ptxt.textContent = "Passo " + Math.min(state.i + 1, STEPS.length) + " de " + STEPS.length;
+      }
+
+      function render() {
+        setProgress();
+        var s = STEPS[state.i];
+        if (!s) {
+          return renderResult();
+        }
+        var html = '<div class="step">';
+        html += '<p class="eyebrow">' + s.eyebrow + "</p>";
+        html += '<h2 class="q-title">' + s.title + "</h2>";
+
+        if (s.type === "single" || s.type === "multi") {
+          html += '<div class="options">';
+          var current = state.answers[s.key] || (s.type === "multi" ? [] : null);
+          s.options.forEach(function (o, idx) {
+            var sel = s.type === "multi" ? current.indexOf(o.label) > -1 : current === o.label;
+            html +=
+              '<button class="opt' +
+              (sel ? " sel" : "") +
+              '" data-idx="' +
+              idx +
+              '">' +
+              '<span class="opt-ic">' +
+              o.ic +
+              "</span>" +
+              "<span>" +
+              o.label +
+              "</span>" +
+              '<span class="opt-check">' +
+              (s.type === "multi" ? "✓" : "") +
+              "</span>" +
+              "</button>";
+          });
+          html += "</div>";
+          if (s.note) {
+            html += '<p class="hint">' + s.note + "</p>";
+          }
+        } else if (s.type === "text" || s.type === "contact") {
+          s.fields.forEach(function (f) {
+            var val = (state.answers[s.key] && state.answers[s.key][f.name]) || "";
+            html +=
+              '<div class="field"><label>' +
+              f.label +
+              "</label>" +
+              '<input type="text" data-name="' +
+              f.name +
+              '" value="' +
+              val.replace(/"/g, "&quot;") +
+              '" placeholder="' +
+              f.placeholder +
+              '" /></div>';
+          });
+        }
+
+        // navegação
+        html += '<div class="nav">';
+        html += state.i > 0 ? '<button class="btn btn-ghost" id="back">← Voltar</button>' : "<span></span>";
+        if (s.type === "multi" || s.type === "text" || s.type === "contact") {
+          var isLast = state.i === STEPS.length - 1;
+          html += '<button class="btn btn-grad" id="next">' + (isLast ? "Ver meu diagnóstico" : "Continuar") + "</button>";
+        } else {
+          html += "<span></span>";
+        }
+        html += "</div>";
+        html += "</div>";
+        quiz.innerHTML = html;
+        bind(s);
+      }
+
+      function bind(s) {
+        var back = document.getElementById("back");
+        if (back)
+          back.onclick = function () {
+            state.i--;
+            render();
+          };
+
+        if (s.type === "single") {
+          quiz.querySelectorAll(".opt").forEach(function (btn) {
+            btn.onclick = function () {
+              state.answers[s.key] = s.options[+btn.dataset.idx].label;
+              quiz.querySelectorAll(".opt").forEach(function (b) {
+                b.classList.remove("sel");
+              });
+              btn.classList.add("sel");
+              setTimeout(function () {
+                state.i++;
+                render();
+              }, 260); // avança sozinho
+            };
+          });
+        } else if (s.type === "multi") {
+          if (!state.answers[s.key]) state.answers[s.key] = [];
+          quiz.querySelectorAll(".opt").forEach(function (btn) {
+            btn.onclick = function () {
+              var label = s.options[+btn.dataset.idx].label;
+              var arr = state.answers[s.key];
+              var p = arr.indexOf(label);
+              if (p > -1) {
+                arr.splice(p, 1);
+                btn.classList.remove("sel");
+              } else {
+                arr.push(label);
+                btn.classList.add("sel");
+              }
+            };
+          });
+          document.getElementById("next").onclick = function () {
+            state.i++;
+            render();
+          };
+        } else if (s.type === "text" || s.type === "contact") {
+          var next = document.getElementById("next");
+          function collect() {
+            var obj = {};
+            quiz.querySelectorAll("input").forEach(function (inp) {
+              obj[inp.dataset.name] = inp.value.trim();
+            });
+            state.answers[s.key] = obj;
+          }
+          quiz.querySelectorAll("input").forEach(function (inp) {
+            inp.addEventListener("input", collect);
+            inp.addEventListener("keydown", function (e) {
+              if (e.key === "Enter") {
+                collect();
+                next.click();
+              }
+            });
+          });
+          next.onclick = function () {
+            collect();
+            state.i++;
+            render();
+          };
+        }
+      }
+
+      function renderResult() {
+        fill.style.width = "100%";
+        ptxt.textContent = "Diagnóstico pronto";
+        var a = state.answers;
+        var resultado = a.resultado || "Vender pela internet";
+        var recs = RECS[resultado] || RECS["Vender pela internet"];
+        var nome = (a.contato && a.contato.nome) || "";
+        var cidade = (a.regiao && a.regiao.cidade) || "sua região";
+
+        var recCards = recs
+          .map(function (r) {
+            return '<div class="rec"><span class="rec-ic">' + r.ic + "</span><div><h3>" + r.t + "</h3><p>" + r.d + "</p></div></div>";
+          })
+          .join("");
+
+        var conhece = Array.isArray(a.conhece) && a.conhece.length ? a.conhece.join(", ") : "Primeiro contato";
+
+        var summary =
+          '<div class="summary">' +
+          row("Objetivo", a.objetivo) +
+          row("Investimento", a.investimento) +
+          row("Resultado esperado", resultado) +
+          row("Região", cidade) +
+          row("Já conhecia", conhece) +
+          "</div>";
+
+        // mensagem para o WhatsApp
+        var msg =
+          "Olá! Fiz o diagnóstico no site da AURA Growth." +
+          (nome ? " Meu nome é " + nome + "." : "") +
+          "\n\n• Objetivo: " +
+          (a.objetivo || "-") +
+          "\n• Investimento: " +
+          (a.investimento || "-") +
+          "\n• Resultado esperado: " +
+          resultado +
+          "\n• Região que quero alcançar: " +
+          cidade +
+          "\n• Já conhecia: " +
+          conhece +
+          "\n\nSoluções recomendadas pra mim: " +
+          recs
+            .map(function (r) {
+              return r.t;
+            })
+            .join(", ") +
+          ".\n\nQuero conversar sobre isso!";
+        var link = "https://wa.me/" + WHATS_DESTINO + "?text=" + encodeURIComponent(msg);
+
+        quiz.innerHTML =
+          '<div class="result">' +
+          '<div class="result-emoji">✨</div>' +
+          "<h2>" +
+          (nome ? nome + ", seu" : "Seu") +
+          ' diagnóstico está <span class="em">pronto</span></h2>' +
+          '<p class="result-lead">Com base nas suas respostas, estas são as soluções que mais fazem sentido para o seu momento e para alcançar ' +
+          cidade +
+          ". Dá uma olhada e, quando quiser, é só chamar a gente.</p>" +
+          '<div class="recs">' +
+          recCards +
+          "</div>" +
+          summary +
+          '<a class="wa-btn" href="' +
+          link +
+          '" target="_blank" rel="noopener" onclick="try{gtag(\'event\',\'conversion_diagnostico\');}catch(e){}">' +
+          '<svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.1 1.5 5.8L0 24l6.3-1.7C8 23.4 10 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 22c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.5 15.5 2 13.8 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10zm5.5-7.6c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>' +
+          "Falar com a AURA agora</a>" +
+          '<button class="restart" id="restart">Refazer o diagnóstico</button>' +
+          "</div>";
+
+        document.getElementById("restart").onclick = function () {
+          state = { i: 0, answers: {} };
+          render();
+        };
+      }
+
+      function row(k, v) {
+        return '<div class="summary-row"><span>' + k + "</span><span>" + (v || "-") + "</span></div>";
+      }
+
+      render();
+    </script>
+  </body>
+</html>
