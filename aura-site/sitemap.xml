@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://auragrowth.com.br/</loc><lastmod>2026-09-04</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://auragrowth.com.br/servicos</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://auragrowth.com.br/criacao-de-sites</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://auragrowth.com.br/gestao-de-midias-e-marketing</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://auragrowth.com.br/sobre</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://auragrowth.com.br/contato</loc><lastmod>2026-09-04</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <!-- Página de diagnóstico. Se você publicar a diagnostico.html NESTE mesmo
+       domínio, mantenha a linha abaixo. Se publicar no seu OUTRO domínio,
+       APAGUE esta linha e crie um sitemap próprio naquele domínio. -->
+  <url><loc>https://auragrowth.com.br/diagnostico</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Artigos do blog (a página blog-post.html abre cada um pelo ?post=slug). -->
+  <url><loc>https://auragrowth.com.br/blog-post?post=google-maps-local</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://auragrowth.com.br/blog-post?post=quanto-investir-trafego</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://auragrowth.com.br/blog-post?post=site-ou-instagram</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://auragrowth.com.br/blog-post?post=erros-site-nao-vende</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://auragrowth.com.br/blog-post?post=responder-rapido-whatsapp</loc><lastmod>2026-09-04</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>

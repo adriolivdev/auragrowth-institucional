@@ -8,6 +8,10 @@
 document.addEventListener("DOMContentLoaded", function () {
   var AURA_WHATS = "5547991518157";
 
+  // Em telas de toque (sem hover) os carrosséis viram scroll manual,
+  // então não precisamos duplicar os cards (a duplicação só serve pro loop automático).
+  var isTouch = window.matchMedia && window.matchMedia("(hover: none)").matches;
+
   /* === HEADER SCROLL === */
   var hdr = document.getElementById("hdr");
   if (hdr) {
@@ -277,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function fillTrack(trackEl, list) {
-    var doubled = list.concat(list);
+    var doubled = isTouch ? list : list.concat(list);
     doubled.forEach(function (c) {
       trackEl.appendChild(buildClientCard(c));
     });
@@ -346,8 +350,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   var certTrack = document.getElementById("certsTrack");
   if (certTrack && CERTIFICACOES.length) {
-    // duplica a lista para o loop do marquee ficar contínuo
-    CERTIFICACOES.concat(CERTIFICACOES).forEach(function (c) {
+    // no desktop duplica para o loop; no toque mostra uma vez (scroll manual)
+    (isTouch ? CERTIFICACOES : CERTIFICACOES.concat(CERTIFICACOES)).forEach(function (c) {
       certTrack.appendChild(buildCertCard(c));
     });
   }
@@ -596,68 +600,18 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ══════════════════════════════════════════
      BLOG (slider da página inicial)
      ------------------------------------------------------------------
-     >>> É AQUI QUE VOCÊ PUBLICA/EDITA OS CONTEÚDOS DO BLOG <<<
-     Cada post é um item do array POSTS abaixo. Campos:
-       titulo  -> título do post
-       cat     -> categoria (ex: 'SEO Local', 'Tráfego Pago')
-       data    -> data (ex: 'Set 2026')
-       resumo  -> 1 ou 2 frases de chamada
-       icone   -> emoji que aparece na capa
-       url     -> link do post. Enquanto não tiver a página do post,
-                  deixe '#'. Quando criar o artigo (ex: blog-post.html),
-                  troque pelo caminho do arquivo.
-     Para ADICIONAR um post, copie uma linha e edite. Para REMOVER, apague.
-     Os exemplos abaixo são MODELOS de pauta (troque pelos seus conteúdos reais).
+     Os posts vêm do arquivo assets/blog.js (window.BLOG_POSTS).
+     >>> PARA PUBLICAR/EDITAR CONTEÚDO, MEXA NAQUELE ARQUIVO <<<
+     Cada card é clicável e abre a página do artigo:
+        /blog-post?post=SLUG   (arquivo blog-post.html)
      ══════════════════════════════════════════ */
-  var POSTS = [
-    {
-      titulo: "Como aparecer no Google Maps da sua cidade",
-      cat: "SEO Local",
-      data: "Set 2026",
-      resumo: "O passo a passo para o seu negócio ser encontrado por quem procura seu serviço na região.",
-      icone: "📍",
-      url: "#",
-    },
-    {
-      titulo: "Quanto investir em tráfego pago para começar",
-      cat: "Tráfego Pago",
-      data: "Set 2026",
-      resumo: "Entenda como definir um orçamento inicial de Google e Meta Ads sem desperdiçar dinheiro.",
-      icone: "🎯",
-      url: "#",
-    },
-    {
-      titulo: "Site ou Instagram: por onde começar?",
-      cat: "Estratégia",
-      data: "Ago 2026",
-      resumo: "Para prestador de serviço e comércio local, qual canal traz cliente mais rápido.",
-      icone: "🤔",
-      url: "#",
-    },
-    {
-      titulo: "5 erros que fazem seu site não vender",
-      cat: "Sites",
-      data: "Ago 2026",
-      resumo: "Do WhatsApp escondido ao site lento: o que corrigir para transformar visita em cliente.",
-      icone: "🚀",
-      url: "#",
-    },
-    {
-      titulo: "Por que responder rápido no WhatsApp vende mais",
-      cat: "Conversão",
-      data: "Jul 2026",
-      resumo: "O tempo de resposta é decisivo. Veja como não perder lead por demora.",
-      icone: "💬",
-      url: "#",
-    },
-  ];
+  var POSTS = window.BLOG_POSTS || [];
 
   function buildPostCard(p) {
-    var card = document.createElement(p.url && p.url !== "#" ? "a" : "div");
+    // cada card é um LINK para a página do artigo (abre o conteúdo ao clicar)
+    var card = document.createElement("a");
     card.className = "blog-card";
-    if (p.url && p.url !== "#") {
-      card.href = p.url;
-    }
+    card.href = "blog-post.html?post=" + encodeURIComponent(p.slug);
     card.innerHTML =
       '<div class="blog-card-img">' +
       escHTML(p.icone || "📝") +
@@ -667,6 +621,7 @@ document.addEventListener("DOMContentLoaded", function () {
       '<div class="blog-card-body">' +
       '<span class="blog-card-date">' +
       escHTML(p.data) +
+      (p.leitura ? " · " + escHTML(p.leitura) + " de leitura" : "") +
       "</span>" +
       "<h3>" +
       escHTML(p.titulo) +
@@ -680,9 +635,142 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   var blogTrack = document.getElementById("blogTrack");
   if (blogTrack && POSTS.length) {
-    // duplica para o loop do slider ficar contínuo
-    POSTS.concat(POSTS).forEach(function (p) {
+    // no desktop duplica para o loop; no toque mostra uma vez (scroll manual)
+    (isTouch ? POSTS : POSTS.concat(POSTS)).forEach(function (p) {
       blogTrack.appendChild(buildPostCard(p));
     });
   }
 });
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOTION PREMIUM (v6): scroll effects e microinterações.
+   Bloco independente. Respeita "prefers-reduced-motion".
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  ready(function () {
+    /* --- Barra de progresso de leitura --- */
+    var prog = document.createElement("div");
+    prog.className = "scroll-prog";
+    document.body.appendChild(prog);
+    function updProg() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var p = max > 0 ? h.scrollTop / max : 0;
+      prog.style.width = p * 100 + "%";
+    }
+    window.addEventListener("scroll", updProg, { passive: true });
+    updProg();
+
+    // Se o usuário prefere menos movimento, para por aqui (só a barra fica).
+    if (reduce) return;
+
+    /* --- Revelação em cascata (stagger) de cards e blocos --- */
+    var sel = ".quem-card,.svc-link,.feat,.plan,.step-item,.team-card,.faq-i,.cases-diff,.article-more-item";
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel));
+    var counts = new Map();
+    els.forEach(function (el) {
+      var p = el.parentNode;
+      var i = counts.get(p) || 0;
+      counts.set(p, i + 1);
+      el.classList.add("will-reveal");
+      el.style.setProperty("--rd", Math.min(i, 6) * 70 + "ms");
+    });
+    if ("IntersectionObserver" in window) {
+      var ro = new IntersectionObserver(
+        function (en) {
+          en.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add("revealed");
+              ro.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
+      );
+      els.forEach(function (el) {
+        ro.observe(el);
+      });
+    } else {
+      els.forEach(function (el) {
+        el.classList.add("revealed");
+      });
+    }
+
+    /* --- Contadores: os números da barra sobem quando aparecem --- */
+    function animNum(el) {
+      var m = el.textContent.trim().match(/^(\d+)(.*)$/);
+      if (!m) return; // só anima quando começa com número (ex: 5+, 100%)
+      var target = parseInt(m[1], 10),
+        suffix = m[2],
+        dur = 1200,
+        t0 = null;
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    var nums = document.querySelectorAll(".bar-n");
+    if ("IntersectionObserver" in window && nums.length) {
+      var no = new IntersectionObserver(
+        function (en) {
+          en.forEach(function (e) {
+            if (e.isIntersecting) {
+              animNum(e.target);
+              no.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.6 },
+      );
+      nums.forEach(function (n) {
+        no.observe(n);
+      });
+    }
+
+    /* --- Parallax sutil das badges flutuantes do herói --- */
+    var hero = document.querySelector(".hero");
+    var badges = document.querySelector(".hero-float-badges");
+    if (hero && badges) {
+      var ticking = false;
+      window.addEventListener(
+        "scroll",
+        function () {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(function () {
+            var y = window.scrollY || 0;
+            if (y < hero.offsetHeight) badges.style.transform = "translateY(" + y * 0.14 + "px)";
+            ticking = false;
+          });
+        },
+        { passive: true },
+      );
+    }
+
+    /* --- Dica de rolagem no herói (some ao rolar) --- */
+    if (hero) {
+      var hint = document.createElement("div");
+      hint.className = "scroll-hint";
+      hint.setAttribute("aria-hidden", "true");
+      hint.innerHTML = '<span class="mouse"></span><span>role</span>';
+      hero.appendChild(hint);
+      window.addEventListener(
+        "scroll",
+        function () {
+          hint.classList.toggle("hide", (window.scrollY || 0) > 120);
+        },
+        { passive: true },
+      );
+    }
+  });
+})();

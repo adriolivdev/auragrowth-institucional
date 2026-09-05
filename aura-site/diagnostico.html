@@ -24,11 +24,45 @@
       name="description"
       content="Responda algumas perguntas rápidas e receba um diagnóstico gratuito com as melhores soluções digitais para o seu negócio, feito pela AURA Growth."
     />
-    <link rel="canonical" href="https://auragrowth.com.br/diagnostico.html" />
+    <link rel="canonical" href="https://auragrowth.com.br/diagnostico" />
     <meta name="robots" content="index, follow" />
+    <meta name="geo.region" content="BR-SC" />
+    <meta name="geo.placename" content="Guaramirim, Santa Catarina, Brasil" />
+    <meta name="geo.position" content="-26.473500;-49.002800" />
+    <meta name="ICBM" content="-26.473500, -49.002800" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Diagnóstico digital gratuito | AURA Growth" />
     <meta property="og:description" content="Descubra as melhores soluções digitais para o seu negócio em 2 minutos." />
+    <meta property="og:image" content="https://auragrowth.com.br/logo-aura.png" />
+    <meta property="og:locale" content="pt_BR" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "name": "Diagnóstico digital gratuito | AURA Growth",
+            "url": "https://auragrowth.com.br/diagnostico",
+            "inLanguage": "pt-BR",
+            "description": "Diagnóstico digital gratuito e sem compromisso da AURA Growth: responda algumas perguntas e receba as melhores soluções para o seu negócio.",
+            "isPartOf": { "@type": "WebSite", "name": "AURA Growth Digital", "url": "https://auragrowth.com.br/" },
+            "about": {
+              "@type": "Organization",
+              "name": "AURA Growth Digital",
+              "url": "https://auragrowth.com.br/",
+              "areaServed": ["Guaramirim", "Jaraguá do Sul", "Joinville", "Santa Catarina", "Brasil"]
+            }
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://auragrowth.com.br/" },
+              { "@type": "ListItem", "position": 2, "name": "Diagnóstico", "item": "https://auragrowth.com.br/diagnostico" }
+            ]
+          }
+        ]
+      }
+    </script>
 
     <!-- Google Tag Manager (mesmo container do site, funciona entre domínios) -->
     <script>
@@ -552,6 +586,18 @@
         color: var(--purple);
         text-decoration: none;
       }
+      /* H1 acessível para SEO/leitores de tela, sem impacto visual */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
     </style>
   </head>
 
@@ -571,12 +617,13 @@
 
     <header>
       <a class="brand" href="index.html">
-        <img src="logo-aura.png" alt="AURA Growth" onerror="this.style.display = 'none'" />
+        <img src="logo-aura.png" alt="AURA Growth" width="120" height="34" decoding="async" onerror="this.style.display = 'none'" />
         <span class="brand-txt">AURA <b>Growth</b></span>
       </a>
     </header>
 
     <main>
+      <h1 class="sr-only">Diagnóstico digital gratuito da AURA Growth</h1>
       <div class="card">
         <div class="progress">
           <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
@@ -641,6 +688,32 @@
           eyebrow: "Onde você quer chegar",
           title: 'Qual <span class="em">cidade ou região</span> você quer alcançar?',
           fields: [{ name: "cidade", label: "Cidade ou região", placeholder: "Ex: Guaramirim, Jaraguá do Sul, Norte de SC..." }],
+        },
+        {
+          key: "local_fisico",
+          type: "single",
+          eyebrow: "Sobre o seu atendimento",
+          title: 'Sua empresa possui um <span class="em">local físico</span> onde atende clientes?',
+          options: [
+            { ic: "🏬", label: "Sim" },
+            { ic: "💻", label: "Não" },
+          ],
+        },
+        {
+          key: "google_perfil",
+          type: "single",
+          // Só aparece se a empresa tiver local físico (pergunta condicional).
+          showIf: function (a) {
+            return a.local_fisico === "Sim";
+          },
+          eyebrow: "Presença local",
+          title: 'Sua empresa já possui um <span class="em">Perfil da Empresa no Google</span> (Google Business Profile)?',
+          note: "É aquele card que aparece no Google e no Maps com nome, telefone, horário e avaliações.",
+          options: [
+            { ic: "✅", label: "Sim" },
+            { ic: "🚫", label: "Não" },
+            { ic: "🤷", label: "Não sei" },
+          ],
         },
         {
           key: "conhece",
@@ -712,18 +785,37 @@
       };
 
       /* ======================= MOTOR DO QUIZ ======================== */
-      var state = { i: 0, answers: {} };
+      var state = { i: 0, dir: 1, answers: {} };
       var quiz = document.getElementById("quiz");
       var fill = document.getElementById("fill");
       var ptxt = document.getElementById("ptxt");
 
+      // Um passo é "visível" se não tiver condição, ou se a condição for verdadeira.
+      function visible(i) {
+        var s = STEPS[i];
+        return s && (!s.showIf || s.showIf(state.answers));
+      }
+      // Lista de índices de passos visíveis (usada para o progresso).
+      function visibleIdxs() {
+        var out = [];
+        for (var i = 0; i < STEPS.length; i++) if (visible(i)) out.push(i);
+        return out;
+      }
+
       function setProgress() {
-        var pct = (state.i / STEPS.length) * 100;
-        fill.style.width = pct + "%";
-        ptxt.textContent = "Passo " + Math.min(state.i + 1, STEPS.length) + " de " + STEPS.length;
+        var vis = visibleIdxs();
+        var pos = vis.indexOf(state.i);
+        var atual = pos > -1 ? pos + 1 : vis.length;
+        fill.style.width = ((atual - 1) / vis.length) * 100 + "%";
+        ptxt.textContent = "Passo " + atual + " de " + vis.length;
       }
 
       function render() {
+        // Pula passos que não devem aparecer (ex: Perfil do Google sem local físico).
+        while (state.i >= 0 && state.i < STEPS.length && !visible(state.i)) {
+          state.i += state.dir;
+        }
+        if (state.i < 0) state.i = 0;
         setProgress();
         var s = STEPS[state.i];
         if (!s) {
@@ -795,6 +887,7 @@
         var back = document.getElementById("back");
         if (back)
           back.onclick = function () {
+            state.dir = -1;
             state.i--;
             render();
           };
@@ -808,6 +901,7 @@
               });
               btn.classList.add("sel");
               setTimeout(function () {
+                state.dir = 1;
                 state.i++;
                 render();
               }, 260); // avança sozinho
@@ -830,6 +924,7 @@
             };
           });
           document.getElementById("next").onclick = function () {
+            state.dir = 1;
             state.i++;
             render();
           };
@@ -853,6 +948,7 @@
           });
           next.onclick = function () {
             collect();
+            state.dir = 1;
             state.i++;
             render();
           };
@@ -864,9 +960,38 @@
         ptxt.textContent = "Diagnóstico pronto";
         var a = state.answers;
         var resultado = a.resultado || "Vender pela internet";
-        var recs = RECS[resultado] || RECS["Vender pela internet"];
+        var recs = (RECS[resultado] || RECS["Vender pela internet"]).slice();
         var nome = (a.contato && a.contato.nome) || "";
         var cidade = (a.regiao && a.regiao.cidade) || "sua região";
+
+        /* ══════════════════════════════════════════════════════════════
+           REGRA: empresa com LOCAL FÍSICO recebe automaticamente a
+           recomendação de Perfil da Empresa no Google (Google Business
+           Profile). O texto muda conforme já ter ou não o perfil.
+           ══════════════════════════════════════════════════════════════ */
+        if (a.local_fisico === "Sim") {
+          var gbp;
+          if (a.google_perfil === "Não") {
+            gbp = {
+              ic: "📍",
+              t: "Criar seu Perfil da Empresa no Google",
+              d: "Como você atende clientes em um local físico e ainda não tem o perfil, criar e configurar o Google Business Profile é estratégico para aparecer nas buscas locais e no Google Maps. Cuidamos de categoria principal e secundárias, descrição, serviços, fotos, horário, telefone e site.",
+            };
+          } else if (a.google_perfil === "Sim") {
+            gbp = {
+              ic: "📍",
+              t: "Otimizar seu Perfil da Empresa no Google",
+              d: "Você já tem um perfil, então vamos analisar e otimizar: categorias, descrição, serviços, fotos, horário, avaliações e respostas às avaliações, para melhorar seu ranqueamento nas buscas locais e no Maps.",
+            };
+          } else {
+            gbp = {
+              ic: "📍",
+              t: "Analisar seu Perfil da Empresa no Google",
+              d: "Como você atende em um local físico, primeiro verificamos se já existe um perfil no seu nome e, a partir disso, criamos ou otimizamos o Google Business Profile para você aparecer nas buscas locais e no Google Maps.",
+            };
+          }
+          recs.unshift(gbp); // entra como primeira recomendação (é estratégica para negócio local)
+        }
 
         var recCards = recs
           .map(function (r) {
@@ -876,12 +1001,19 @@
 
         var conhece = Array.isArray(a.conhece) && a.conhece.length ? a.conhece.join(", ") : "Primeiro contato";
 
+        var localTxt = a.local_fisico
+          ? a.local_fisico + (a.local_fisico === "Sim" ? " (atende em local físico)" : " (atende remoto/online)")
+          : null;
+        var perfilTxt = a.local_fisico === "Sim" && a.google_perfil ? a.google_perfil : null;
+
         var summary =
           '<div class="summary">' +
           row("Objetivo", a.objetivo) +
           row("Investimento", a.investimento) +
           row("Resultado esperado", resultado) +
           row("Região", cidade) +
+          (localTxt ? row("Local físico", localTxt) : "") +
+          (perfilTxt ? row("Perfil no Google", perfilTxt) : "") +
           row("Já conhecia", conhece) +
           "</div>";
 
@@ -897,6 +1029,8 @@
           resultado +
           "\n• Região que quero alcançar: " +
           cidade +
+          (localTxt ? "\n• Local físico: " + localTxt : "") +
+          (perfilTxt ? "\n• Perfil no Google: " + perfilTxt : "") +
           "\n• Já conhecia: " +
           conhece +
           "\n\nSoluções recomendadas pra mim: " +
@@ -921,7 +1055,7 @@
           recCards +
           "</div>" +
           summary +
-          '<a class="wa-btn" href="' +
+          '<a class="wa-btn" data-gtm="diagnostico-enviar" href="' +
           link +
           '" target="_blank" rel="noopener" onclick="try{gtag(\'event\',\'conversion_diagnostico\');}catch(e){}">' +
           '<svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.1 1.5 5.8L0 24l6.3-1.7C8 23.4 10 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 22c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.5 15.5 2 13.8 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10zm5.5-7.6c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>' +
@@ -930,7 +1064,7 @@
           "</div>";
 
         document.getElementById("restart").onclick = function () {
-          state = { i: 0, answers: {} };
+          state = { i: 0, dir: 1, answers: {} };
           render();
         };
       }

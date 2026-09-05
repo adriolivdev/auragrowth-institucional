@@ -1137,11 +1137,13 @@ nav a.act {
 .dep-t2 {
   animation: scrollR 46s linear infinite;
 }
-.dep-track-w:hover .dep-t1.dep-track-w:hover .dep-t2 {
+.dep-track-w:hover .dep-t1,
+.dep-track-w:hover .dep-t2 {
   animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
-  .dep-t1.dep-t2 {
+  .dep-t1,
+  .dep-t2 {
     animation: none;
   }
 }
@@ -2469,7 +2471,8 @@ a.feat:hover {
 
 /* RESPONSIVO */
 @media (max-width: 768px) {
-  nav.btn-hn {
+  nav,
+  .btn-hn {
     display: none;
   }
   .ham {
@@ -2984,4 +2987,536 @@ a.feat:hover {
 }
 .btn-grad:hover {
   box-shadow: 0 10px 30px rgba(232, 96, 44, 0.32);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SLIDERS TAPPÁVEIS NO MOBILE
+   Em telas de toque (sem hover), o auto-scroll é desligado e os cards
+   viram um carrossel que o usuário ARRASTA com o dedo e CLICA normal.
+   Assim resolve o problema de card em movimento que não dá pra tocar.
+   (No desktop continua passando sozinho e pausando no hover.)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (hover: none) {
+  .blog-slider-w,
+  .dep-track-w,
+  .certs-track-w {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 1.2rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+    scrollbar-width: none;
+  }
+  .blog-slider-w::-webkit-scrollbar,
+  .dep-track-w::-webkit-scrollbar,
+  .certs-track-w::-webkit-scrollbar {
+    display: none;
+  }
+  .blog-track,
+  .dep-track,
+  .certs-track {
+    animation: none !important;
+    padding: 0 1.2rem;
+  }
+  .blog-card,
+  .dep-card,
+  .cert-card {
+    scroll-snap-align: start;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   REFINAMENTO MOBILE (v6): seções mais curtas, hero enxuta, tudo
+   proporcional pra converter sem cansar o lead. Alto padrão no celular.
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* seções deixam de ser longas: menos respiro vertical */
+  .sec {
+    padding: 3rem 0;
+  }
+  .sh {
+    margin-bottom: 2rem;
+  }
+  .sh h2 {
+    font-size: clamp(1.7rem, 6.5vw, 2.2rem);
+  }
+  /* hero sem altura de tela cheia (evita rolagem morta) */
+  .hero {
+    min-height: auto;
+    padding: 6.5rem 1.25rem 3rem;
+  }
+  .hero-h {
+    font-size: clamp(2.6rem, 11vw, 3.6rem);
+    margin-bottom: 1.1rem;
+  }
+  .hero-p {
+    margin-bottom: 1.8rem;
+  }
+  .page-hero {
+    padding: 6.5rem 0 2.6rem;
+  }
+  /* grids com menos gap no celular */
+  .quem-grid,
+  .feat-grid,
+  .plans,
+  .svc-links,
+  .team-grid {
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  /* barra de números mais compacta */
+  .bar-inner {
+    padding: 1.4rem 1rem;
+  }
+  /* carrosséis: cards proporcionais à tela, arrastáveis (hover:none) */
+  .blog-card {
+    width: 80vw;
+    max-width: 320px;
+  }
+  .dep-card {
+    width: 80vw;
+    max-width: 320px;
+  }
+  .cert-card {
+    width: 62vw;
+    max-width: 220px;
+  }
+  /* faixa de ofertas mais discreta */
+  .offer-item {
+    padding: 0.7rem 1.1rem;
+    font-size: 0.8rem;
+  }
+  /* diagnóstico e blocos lado a lado empilham */
+  .diag-box,
+  .split,
+  .w.split {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sec {
+    padding: 2.5rem 0;
+  }
+  .sh {
+    margin-bottom: 1.6rem;
+  }
+  .hero {
+    padding: 6rem 1rem 2.4rem;
+  }
+  .hero-h {
+    font-size: clamp(2.3rem, 12vw, 3rem);
+  }
+  .hero-p {
+    font-size: 0.97rem;
+    line-height: 1.6;
+  }
+  .cases-diff {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.7rem;
+  }
+  /* CTAs sempre full-width no celular pequeno = mais toque, mais conversão */
+  .hero-cta,
+  .diag-cta,
+  .page-hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PÁGINA DE ARTIGO DO BLOG (blog-post.html)
+   O conteúdo é montado pelo assets/blog.js + script inline da página.
+   ═══════════════════════════════════════════════════════════════════ */
+.article-hero {
+  background: var(--cream);
+  padding: 7rem clamp(1rem, 5vw, 2.5rem) 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.article-hero .w {
+  max-width: 760px;
+}
+.article-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--purple);
+  margin-bottom: 1.25rem;
+  transition: color 0.18s;
+}
+.article-back:hover {
+  color: var(--orange);
+}
+.article-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--grad);
+  padding: 0.35rem 0.85rem;
+  border-radius: 99px;
+}
+.article-title {
+  font-family: var(--font-d);
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.12;
+  margin: 1rem 0 0.75rem;
+}
+.article-meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.article-lead {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-top: 1rem;
+}
+.article-wrap {
+  padding: 3rem clamp(1rem, 5vw, 2.5rem) 4rem;
+}
+.article {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.article-body h2 {
+  font-family: var(--font-d);
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 2.2rem 0 0.8rem;
+}
+.article-body p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #34322f;
+  margin-bottom: 1.1rem;
+}
+.article-body ul {
+  margin: 0 0 1.3rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.article-body li {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: #34322f;
+  padding-left: 0.4rem;
+}
+.article-body li::marker {
+  color: var(--purple);
+}
+.article-body blockquote {
+  margin: 1.8rem 0;
+  padding: 1.1rem 1.5rem;
+  border-left: 3px solid var(--purple);
+  background: rgba(124, 77, 219, 0.05);
+  border-radius: 0 12px 12px 0;
+  font-family: var(--font-d);
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.article-cta {
+  max-width: 720px;
+  margin: 2.5rem auto 0;
+  background: var(--dark);
+  border-radius: 18px;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  text-align: center;
+  color: #fff;
+}
+.article-cta h3 {
+  font-family: var(--font-d);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.article-cta p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.4rem;
+  font-size: 0.95rem;
+}
+.article-more {
+  max-width: 720px;
+  margin: 3rem auto 0;
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+.article-more h4 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.article-more-list {
+  display: grid;
+  gap: 0.75rem;
+}
+.article-more-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--white);
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s,
+    transform 0.18s;
+}
+.article-more-item:hover {
+  border-color: rgba(124, 77, 219, 0.3);
+  box-shadow: 0 6px 22px rgba(124, 77, 219, 0.1);
+  transform: translateY(-1px);
+}
+.article-more-item .ami-ic {
+  font-size: 1.4rem;
+}
+.article-more-item .ami-t {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+.article-more-item .ami-c {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+/* índice do blog (quando não há post selecionado) */
+.blog-index {
+  max-width: 760px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOTION PREMIUM (v6): scroll effects, reveals em cascata, microinterações
+   Tudo desligado automaticamente para quem prefere menos movimento.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* --- Barra de progresso de leitura (topo da página) --- */
+.scroll-prog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  z-index: 200;
+  background: var(--grad);
+  box-shadow: 0 0 12px rgba(124, 77, 219, 0.5);
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* --- Revelação de elementos ao rolar, com efeito cascata (stagger) --- */
+.will-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--rd, 0ms);
+  will-change: opacity, transform;
+}
+.will-reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Entrada orquestrada do herói (uma vez, ao carregar) --- */
+.hero-c > * {
+  opacity: 0;
+  animation: heroUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-c > *:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.hero-c > *:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.hero-c > *:nth-child(3) {
+  animation-delay: 0.31s;
+}
+.hero-c > *:nth-child(4) {
+  animation-delay: 0.44s;
+}
+.hero-c > *:nth-child(5) {
+  animation-delay: 0.57s;
+}
+.page-hero .w > * {
+  opacity: 0;
+  animation: heroUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.page-hero .w > *:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.page-hero .w > *:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.page-hero .w > *:nth-child(3) {
+  animation-delay: 0.27s;
+}
+.page-hero .w > *:nth-child(4) {
+  animation-delay: 0.38s;
+}
+.page-hero .w > *:nth-child(5) {
+  animation-delay: 0.49s;
+}
+.page-hero .w > *:nth-child(6) {
+  animation-delay: 0.6s;
+}
+@keyframes heroUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Dica de rolagem no herói (mouse animado) --- */
+.scroll-hint {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  transition: opacity 0.4s;
+}
+.scroll-hint.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-hint .mouse {
+  width: 22px;
+  height: 34px;
+  border: 1.5px solid var(--muted);
+  border-radius: 12px;
+  position: relative;
+}
+.scroll-hint .mouse::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 3px;
+  height: 6px;
+  background: var(--muted);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  animation: mouseWheel 1.7s ease-in-out infinite;
+}
+@keyframes mouseWheel {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, 9px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 11px);
+  }
+}
+
+/* --- Sublinhado que cresce nos links do menu --- */
+nav a {
+  position: relative;
+}
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 2px;
+  width: 0;
+  background: var(--grad);
+  border-radius: 2px;
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+nav a:hover::after,
+nav a.act-page::after {
+  width: 100%;
+}
+
+/* --- Brilho que passa nos botões gradiente ao passar o mouse --- */
+.btn-grad {
+  position: relative;
+  overflow: hidden;
+}
+.btn-grad::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.btn-grad:hover::after {
+  animation: btnShine 0.85s ease;
+}
+@keyframes btnShine {
+  to {
+    left: 135%;
+  }
+}
+
+/* --- Parallax das badges do herói (transform aplicado via JS) --- */
+.hero-float-badges {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .will-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .hero-c > *,
+  .page-hero .w > * {
+    opacity: 1;
+    animation: none;
+  }
+  .scroll-hint,
+  .scroll-prog {
+    display: none;
+  }
+  .btn-grad::after {
+    display: none;
+  }
 }

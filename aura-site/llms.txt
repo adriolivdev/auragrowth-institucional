@@ -13,12 +13,12 @@ Princípio da agência: nada de prova social fabricada, número inflado ou prome
 
 ## Serviços
 
-- **Criação de sites e landing pages**, sites rápidos, otimizados para o Google e feitos para converter. Página: https://auragrowth.com.br/criacao-de-sites.html
-- **Gestão de mídias e marketing**, Instagram, conteúdo, SEO local e Google Meu Negócio. Página: https://auragrowth.com.br/gestao-de-midias-e-marketing.html
-- **Tráfego pago (Google Ads e Meta Ads)**, campanhas para gerar leads qualificados. Página: https://auragrowth.com.br/servicos.html#trafego
-- **SEO local e Google Meu Negócio**, aparecer no topo do Google e do Maps na sua cidade. Página: https://auragrowth.com.br/servicos.html#seo-local
-- **Sistemas e automação**, integrações e automação de processos e atendimento. Página: https://auragrowth.com.br/servicos.html#tecnologia
-- **Agentes de IA**, atendimento e qualificação de leads 24/7 no WhatsApp e no site. Página: https://auragrowth.com.br/servicos.html#ia
+- **Criação de sites e landing pages**, sites rápidos, otimizados para o Google e feitos para converter. Página: https://auragrowth.com.br/criacao-de-sites
+- **Gestão de mídias e marketing**, Instagram, conteúdo, SEO local e Google Meu Negócio. Página: https://auragrowth.com.br/gestao-de-midias-e-marketing
+- **Tráfego pago (Google Ads e Meta Ads)**, campanhas para gerar leads qualificados. Página: https://auragrowth.com.br/servicos#trafego
+- **SEO local e Google Meu Negócio**, aparecer no topo do Google e do Maps na sua cidade. Página: https://auragrowth.com.br/servicos#seo-local
+- **Sistemas e automação**, integrações e automação de processos e atendimento. Página: https://auragrowth.com.br/servicos#tecnologia
+- **Agentes de IA**, atendimento e qualificação de leads 24/7 no WhatsApp e no site. Página: https://auragrowth.com.br/servicos#ia
 - **Consultoria e estratégia**, a partir de R$ 250/sessão. Manutenção de sites, a partir de R$ 90/mês.
 
 Valores dos demais serviços são definidos sob medida após um diagnóstico gratuito.
@@ -41,12 +41,12 @@ Yuri SoundCar (automotivo, Araquari-SC), Leo Lauxen (estética, Joinville-SC), C
 ## Páginas
 
 - Início: https://auragrowth.com.br/
-- Serviços: https://auragrowth.com.br/servicos.html
-- Criação de Sites: https://auragrowth.com.br/criacao-de-sites.html
-- Mídias e Marketing: https://auragrowth.com.br/gestao-de-midias-e-marketing.html
-- Sobre: https://auragrowth.com.br/sobre.html
-- Contato: https://auragrowth.com.br/contato.html
-- Diagnóstico gratuito: https://auragrowth.com.br/diagnostico.html
+- Serviços: https://auragrowth.com.br/servicos
+- Criação de Sites: https://auragrowth.com.br/criacao-de-sites
+- Mídias e Marketing: https://auragrowth.com.br/gestao-de-midias-e-marketing
+- Sobre: https://auragrowth.com.br/sobre
+- Contato: https://auragrowth.com.br/contato
+- Diagnóstico gratuito: https://auragrowth.com.br/diagnostico
 - Blog (conteúdos): https://auragrowth.com.br/#blog
 
 ## Diagnóstico gratuito
